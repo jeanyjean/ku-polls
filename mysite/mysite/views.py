@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import redirect
 
 def index(request):
     """ Redirect to the polls index"""
