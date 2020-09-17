@@ -10,6 +10,7 @@ Web applications for conducting online polls and surveys.
 Iterations
 
 * [Iteration 1 Plan](../../wiki/Iteration%201%20Plan) and [Task Board](../../projects/1)
+* [Iteration 2 Plan](../../wiki/Iteration%202%20Plan) and [Task Board](../../projects/2)
 
 ## Licensing 
 Contact @jeanyjean to license.
