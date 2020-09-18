@@ -1,8 +1,9 @@
-li a {
+/* li a {
     color: green;
-}
+} */
 body {
-    background: white url("images/background.gif") no-repeat;
+    background: white url("images/background.gif");
+    color : #fcf812
 }
 
 /* The alert message box */
