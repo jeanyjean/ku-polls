@@ -1,10 +1,44 @@
+<style>
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 20%;
+    }
+
+    td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #dddddd;
+    }
+</style>
+
 <h1>{{ question.question_text }}</h1>
+<br>
 
 <ul>
-{% for choice in question.choice_set.all %}
-    <li>{{ choice.choice_text }} -- {{ choice.votes }} vote{{ choice.votes|pluralize }}</li>
-{% endfor %}
+   <table class="table" >
+            <tr>
+                <th>Choices</th>
+                <th>Number of votes </th>
+            </tr>
+        <tbody>
+            {% for choice in question.choice_set.all %}
+                <tr>
+                    <td>{{ choice.choice_text }}</td>
+                    <td>{{ choice.votes }} </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
 </ul>
+<br>
 
 <a href="{% url 'polls:detail' question.id %}"><button class="vote_again_button" >Vote again?</button></a>
 <a href="{% url 'polls:index'%}"> <button class="back_button" >Back to List of Polls</button></a>
+
+<!-- <br><a>{{ choice.choice_text }}  {{ choice.votes }} </a><br> -->
