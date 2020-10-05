@@ -1,4 +1,6 @@
 # Kasetsart Polls
+[![Build Status](https://travis-ci.com/jeanyjean/ku-polls.svg?branch=master)](https://travis-ci.com/jeanyjean/ku-polls)
+[![codecov](https://codecov.io/gh/jeanyjean/ku-polls/branch/master/graph/badge.svg?token=WKBFGTX02L)](undefined)
 
 Web applications for conducting online polls and surveys.
 
