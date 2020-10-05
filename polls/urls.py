@@ -1,3 +1,4 @@
+"""urls routing for polls."""
 from django.urls import path
 
 from . import views
