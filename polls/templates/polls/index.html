@@ -2,6 +2,16 @@
 
 <link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}">
 
+{% if user.is_authenticated %}
+  <h2> Welcome to KU POLLS, {{ user.first_name }}!</h2>
+  You can vote only once per poll!
+  <a href="{% url 'logout' %}">Click here To Logout!</a>
+{% else %}
+  <h2> Welcome to KU POLLS</h2>
+  You can only view the result 
+  <a href="{% url 'login' %}">Click here To Login!</a>
+{% endif %}
+
 {% if messages %}
   {% for msg in messages %}
     <div class="alert">
