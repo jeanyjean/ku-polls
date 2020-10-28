@@ -33,6 +33,7 @@ class IndexView(generic.ListView):
     #     """
     #     return Question.objects.filter(pub_date__lte=timezone.now())
 
+@login_required
 def poll_view(request, pk):
     """Show the detail of the question or error when vote is not allowed."""
     question = get_object_or_404(Question, pk=pk)
