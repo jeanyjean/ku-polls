@@ -6,7 +6,7 @@ from django.utils import timezone
 from django.urls import reverse
 from django.contrib.auth.models import User
 
-from polls.models import Question
+from polls.models import Question, Choice
 
 def create_question(question_text, days, end_days=30):
     """Create a question.
@@ -30,7 +30,7 @@ class UserVotingtests(TestCase):
 
     def test_authenticated_user_vote(self):
         """Authenticated user try to vote a question."""
-        self.new_question = create_question(question_text='What is your name.', days=-5)
+        self.new_question = create_question(question_text='How are you', days=-5)
         self.client.post(reverse('login'), {'username':'jean', 'password':'jeans123'}, follow = True)  
         url = reverse('polls:vote', args=(self.new_question.id,))
         response = self.client.get(url)
@@ -38,7 +38,7 @@ class UserVotingtests(TestCase):
 
     def test_unauthenticated_user_vote(self):
         """Unauthenticated user try to vote a question."""
-        self.new_question = create_question(question_text='What is your name.', days=-5)
+        self.new_question = create_question(question_text='How are you', days=-5)
         url = reverse('polls:vote', args=(self.new_question.id,))
         response = self.client.get(url)
         self.assertEqual(response.status_code, 302)

@@ -7,7 +7,40 @@ from django.utils import timezone
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
+import logging
+from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed
+from django.dispatch import receiver
+import logging.config
+
 from .models import Choice, Question, Vote
+from .settings import LOGGING
+
+
+
+logging.config.dictConfig(LOGGING)
+logger = logging.getLogger("polls")
+
+def get_client_ip(request):
+    """ Get the client's ip"""
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
+@receiver(user_logged_in)
+def user_logged_in_logging(sender, request, user, **kwargs):
+    logger.info(f'{user.username} logged in with ip: {get_client_ip(request)}')
+
+@receiver(user_logged_out)
+def user_logged_out_logging(sender, request, user, **kwargs):
+    logger.info(f'{user.username} logged out with ip: {get_client_ip(request)}')
+
+@receiver(user_login_failed)
+def user_failed_logged_in_logging(sender, request, credentials, **kwargs):
+    logger.warning(f'{request.POST["username"]} failed to login with ip: {get_client_ip(request)}')
+
 
 
 class IndexView(generic.ListView):
@@ -38,8 +71,8 @@ def poll_view(request, pk):
     """Show the detail of the question or error when vote is not allowed."""
     question = get_object_or_404(Question, pk=pk)
     previous_vote = False
-    if Vote.objects.filter(user = request.user):
-        previous_vote = Vote.objects.filter(user = request.user).first().choice.choice_text
+    if Vote.objects.filter(user = request.user, question = question):
+        previous_vote = Vote.objects.filter(user = request.user, question = question).first().choice.choice_text
     if not question.can_vote():
         messages.error(request, "Voting is not allowed! D:")
         return redirect('polls:index')
@@ -51,6 +84,8 @@ class ResultsView(generic.DetailView):
 
     model = Question
     template_name = 'polls/results.html'
+
+
 
 @login_required
 def vote(request, question_id):
@@ -69,6 +104,7 @@ def vote(request, question_id):
         for choice in question.choice_set.all():
             choice.votes = Vote.objects.filter(question=question).filter(choice=choice).count()
             choice.save()
+        logger.info(f'{request.user.username} with ip: {get_client_ip(request)} submitted a vote for poll with question id: {question_id}')
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
