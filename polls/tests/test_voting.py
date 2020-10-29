@@ -56,6 +56,7 @@ class UserVotingtests(TestCase):
         self.assertEqual(self.first_choice.votes, 1)
         response = self.client.post(reverse('polls:vote', args=(self.new_question.id,)), {'choice':self.second_choice.id})
         self.second_choice = self.new_question.choice_set.get(pk = self.second_choice.id)
+        self.first_choice = self.new_question.choice_set.get(pk = self.first_choice.id)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(self.second_choice.votes, 1)
         self.assertEqual(self.first_choice.votes, 0)
