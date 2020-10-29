@@ -42,3 +42,24 @@ class UserVotingtests(TestCase):
         url = reverse('polls:vote', args=(self.new_question.id,))
         response = self.client.get(url)
         self.assertEqual(response.status_code, 302)
+
+    def test_replace_user_vote(self):  
+        self.new_question = create_question(question_text='How are you', days=-5)
+        self.first_choice = Choice(id = 1, question = self.new_question, choice_text = "I'm ok")
+        self.second_choice = Choice(id = 2, question = self.new_question, choice_text = "I'm fine")
+        self.first_choice.save()
+        self.second_choice.save()
+        self.client.login(username='jean', password='jeans123')
+        response = self.client.post(reverse('polls:vote', args=(self.new_question.id,)), {'choice':self.first_choice.id})
+        self.first_choice = self.new_question.choice_set.get(pk = self.first_choice.id)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(self.first_choice.votes, 1)
+        response = self.client.post(reverse('polls:vote', args=(self.new_question.id,)), {'choice':self.second_choice.id})
+        self.second_choice = self.new_question.choice_set.get(pk = self.second_choice.id)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(self.second_choice.votes, 1)
+        self.assertEqual(self.first_choice.votes, 0)
+    
+    # def test_show_user_previous_vote(self):
+
+
